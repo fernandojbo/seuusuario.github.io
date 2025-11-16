@@ -16,8 +16,8 @@
     }
     .fade-up { animation: fadeInUp 0.7s ease forwards; }
 </style>
-
 </head>
+
 <body class="bg-gray-50 text-gray-800">
 
 <!-- Header -->
@@ -79,34 +79,45 @@
 
         <form class="grid gap-6">
 
+            <!-- Nome + WhatsApp -->
             <div class="grid md:grid-cols-2 gap-6">
                 <input type="text" placeholder="Nome*" class="p-3 border rounded-lg w-full">
                 <input type="text" placeholder="Telefone / WhatsApp*" class="p-3 border rounded-lg w-full">
             </div>
 
-            <!-- CEP AUTOMÁTICO -->
-            <div>
-                <input id="cep" type="text" placeholder="CEP de Origem*" class="p-3 border rounded-lg w-full">
-                <small id="cidade" class="text-sm text-gray-600 mt-1 block"></small>
+            <!-- CEP Origem / Destino -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <input id="cepOrigem" type="text" placeholder="CEP de Origem*" class="p-3 border rounded-lg w-full">
+                    <p id="cidadeOrigem" class="text-sm text-blue-700 font-bold mt-1"></p>
+                </div>
+
+                <div>
+                    <input id="cepDestino" type="text" placeholder="CEP de Destino*" class="p-3 border rounded-lg w-full">
+                    <p id="cidadeDestino" class="text-sm text-blue-700 font-bold mt-1"></p>
+                </div>
             </div>
 
-            <input type="text" placeholder="CEP de Destino*" class="p-3 border rounded-lg w-full">
+            <!-- Valor da mercadoria -->
+            <input type="number" placeholder="Valor da Mercadoria (R$)" class="p-3 border rounded-lg w-full">
 
             <!-- ITENS DINÂMICOS -->
-            <div id="itensArea" class="grid gap-4"></div>
+            <h4 class="font-bold text-xl mt-6">Itens da Carga</h4>
 
-            <button type="button" id="addItem"
-                class="text-blue-700 border border-blue-700 w-fit px-4 py-1 rounded-lg text-sm hover:bg-blue-50 transition">
-                + Adicionar Item
-            </button>
+            <div id="itensContainer" class="grid gap-4"></div>
 
-            <textarea placeholder="Descrição da Carga"
-                      class="p-3 border rounded-lg w-full" rows="4"></textarea>
+            <!-- Totais -->
+            <div class="p-4 bg-gray-100 rounded-lg mt-4">
+                <p id="totalVolumes" class="font-bold"></p>
+                <p id="totalVolumeM3" class="font-bold"></p>
+                <p id="totalPesoReal" class="font-bold"></p>
+                <p id="totalCubado" class="font-bold"></p>
+            </div>
 
             <!-- Botões -->
             <div class="flex flex-col md:flex-row gap-4 justify-center mt-6">
 
-                <a href="https://wa.me/55973018596?text=Olá,%20quero%20cotação%20de%20frete!"
+                <a href="https://wa.me/5599999999999?text=Olá,%20quero%20cotação%20de%20frete!"
                    class="bg-green-600 text-white py-3 px-8 rounded-lg text-center font-bold shadow-md hover:bg-green-700 transition">
                     Enviar pelo WhatsApp
                 </a>
@@ -132,52 +143,91 @@
     © 2025 Namariel Fretes — Todos os direitos reservados.
 </footer>
 
+
+<!-- SCRIPT -->
 <script>
-// --- CEP automático ---
-document.getElementById("cep").addEventListener("input", async function () {
-    const cep = this.value.replace(/\D/g, "");
-    const cidade = document.getElementById("cidade");
 
-    if (cep.length === 8) {
-        try {
-            const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-            const data = await res.json();
-
-            cidade.textContent = data.erro
-                ? "CEP não encontrado"
-                : `Cidade: ${data.localidade} - ${data.uf}`;
-
-        } catch {
-            cidade.textContent = "Erro ao buscar CEP";
-        }
-    } else {
-        cidade.textContent = "";
+// ---- CEP → Cidade ViaCEP ----
+async function buscarCidade(cep, destinoCampo) {
+    if (cep.length !== 8) return;
+    let info = await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(r => r.json());
+    if (info && !info.erro) {
+        destinoCampo.textContent = info.localidade + " - " + info.uf;
     }
-});
-
-// --- Itens Dinâmicos ---
-function criarItem() {
-    const div = document.createElement("div");
-    div.className = "grid md:grid-cols-4 gap-4 items-center";
-
-    div.innerHTML = `
-        <input type="number" placeholder="Peso (kg)" class="p-3 border rounded-lg w-full">
-        <input type="number" placeholder="Altura (cm)" class="p-3 border rounded-lg w-full">
-        <input type="number" placeholder="Largura (cm)" class="p-3 border rounded-lg w-full">
-        <button type="button" class="text-red-600 text-xl font-bold">x</button>
-    `;
-
-    div.querySelector("button").onclick = () => div.remove();
-
-    return div;
 }
 
-document.getElementById("addItem").onclick = () => {
-    document.getElementById("itensArea").appendChild(criarItem());
-};
+document.getElementById("cepOrigem").addEventListener("keyup", e => {
+    buscarCidade(e.target.value.replace(/\D/g, ''), document.getElementById("cidadeOrigem"));
+});
 
-// adicionar 1 item inicial
-document.getElementById("itensArea").appendChild(criarItem());
+document.getElementById("cepDestino").addEventListener("keyup", e => {
+    buscarCidade(e.target.value.replace(/\D/g, ''), document.getElementById("cidadeDestino"));
+});
+
+
+// ---- Itens de carga (dinâmicos) ----
+let container = document.getElementById("itensContainer");
+
+function criarItem() {
+    let div = document.createElement("div");
+    div.className = "grid md:grid-cols-7 gap-2 bg-gray-50 p-3 rounded-lg border";
+
+    div.innerHTML = `
+        <input type="number" placeholder="Qtd" class="p-2 border rounded" oninput="calcularTotais()">
+        <input type="number" placeholder="Peso (kg)" class="p-2 border rounded" oninput="calcularTotais()">
+        <input type="number" placeholder="Altura (cm)" class="p-2 border rounded" oninput="calcularTotais()">
+        <input type="number" placeholder="Largura (cm)" class="p-2 border rounded" oninput="calcularTotais()">
+        <input type="number" placeholder="Comp (cm)" class="p-2 border rounded" oninput="calcularTotais()">
+
+        <button onclick="criarItem()"
+            class="bg-blue-600 text-white px-2 rounded text-xs">+</button>
+
+        <button onclick="this.parentElement.remove(); calcularTotais();"
+            class="bg-red-600 text-white px-2 rounded text-xs">x</button>
+    `;
+
+    container.appendChild(div);
+}
+
+criarItem(); // cria o primeiro item
+
+
+// ---- Cálculos dos totais ----
+function calcularTotais() {
+    let itens = container.children;
+
+    let totalVolumes = 0;
+    let totalPesoReal = 0;
+    let totalVolume = 0; // m³
+    let totalCubado = 0;
+
+    for (let item of itens) {
+        let campos = item.querySelectorAll("input");
+
+        let qtd = Number(campos[0].value);
+        let peso = Number(campos[1].value);
+        let a = Number(campos[2].value) / 100;
+        let l = Number(campos[3].value) / 100;
+        let c = Number(campos[4].value) / 100;
+
+        if (!qtd) continue;
+
+        let volumeUnit = a * l * c;
+        let volumeTotalItem = volumeUnit * qtd;
+        let pesoCubadoItem = volumeTotalItem * 300;
+
+        totalVolumes += qtd;
+        totalPesoReal += peso * qtd;
+        totalVolume += volumeTotalItem;
+        totalCubado += pesoCubadoItem;
+    }
+
+    document.getElementById("totalVolumes").textContent = "Total de Volumes: " + totalVolumes;
+    document.getElementById("totalVolumeM3").textContent = "Volume Total: " + totalVolume.toFixed(3) + " m³";
+    document.getElementById("totalPesoReal").textContent = "Peso Total Real: " + totalPesoReal + " kg";
+    document.getElementById("totalCubado").textContent = "Peso Cubado Total: " + totalCubado.toFixed(1) + " kg";
+}
+
 </script>
 
 </body>
