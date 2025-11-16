@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Namariel Fretes</title>
 
+<link rel="icon" type="image/png" href="/caminho/para/seu/favicon.png"> 
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -20,7 +21,10 @@
 
 <header class="w-full bg-white shadow-md fixed top-0 left-0 z-50">
     <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
-        <h1 class="text-2xl font-bold text-blue-700">Namariel Fretes</h1>
+        
+        <a href="#" class="flex items-center"> 
+            <img src="https://via.placeholder.com/150x50/3B82F6/FFFFFF?text=Namariel+Fretes+LOGO" alt="Logomarca Namariel Fretes" class="h-10">
+        </a>
         <nav class="hidden md:flex gap-6 text-gray-600">
             <a href="#cotacao" class="hover:text-blue-600">Cotação</a>
             <a href="#beneficios" class="hover:text-blue-600">Benefícios</a>
@@ -208,9 +212,7 @@
         const container = document.getElementById("itens-container");
         const item = container.children[0].cloneNode(true); 
         
-        // **CORREÇÃO:** Limpa e reseta os valores dos inputs clonados
         item.querySelectorAll('input').forEach(input => {
-            // Seta '1' para o campo de quantidade, e vazio/zero para os outros
             if (input.classList.contains('item-quantidade')) {
                  input.value = '1';
             } else {
