@@ -123,7 +123,7 @@
                 class="mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 transition">
                 + Adicionar mais itens
             </button>
-
+            
             <div class="bg-gray-100 p-4 rounded-lg border border-gray-200 mt-6 mb-2">
                 <h5 class="text-lg font-semibold mb-3 text-blue-700">Resumo dos Cálculos</h5>
                 <div class="grid grid-cols-2 gap-3 text-sm">
@@ -133,6 +133,7 @@
                     <p><strong>Valor Total Mercadoria:</strong> <span id="total-valor-mercadoria" class="font-bold text-gray-800">R$ 0,00</span></p>
                 </div>
             </div>
+
             <textarea placeholder="Descrição da Carga"
                       class="p-3 border rounded-lg w-full" rows="4"></textarea>
 
@@ -163,10 +164,8 @@
 </footer>
 
 <script>
-    // Fator de Cubagem (m³ para kg), conforme sua solicitação
     const FATOR_CUBAGEM = 300;
 
-    // --- FUNÇÃO PRINCIPAL DE CÁLCULO ---
     function calcularTotais() {
         let pesoRealTotal = 0;
         let volumeTotal = 0;
@@ -175,7 +174,6 @@
         const itens = document.querySelectorAll('#itens-container .item');
 
         itens.forEach(item => {
-            // 1. Coleta e tratamento dos inputs
             const quantidadeInput = item.querySelector('.item-quantidade');
             const pesoInput = item.querySelector('.item-peso');
             const alturaInput = item.querySelector('.item-altura');
@@ -184,27 +182,22 @@
 
             const quantidade = parseFloat(quantidadeInput.value) || 0;
             const pesoKg = parseFloat(pesoInput.value) || 0;
-            // Altura, Largura, Comprimento estão em CM, converter para M (dividir por 100)
             const alturaM = (parseFloat(alturaInput.value) || 0) / 100;
             const larguraM = (parseFloat(larguraInput.value) || 0) / 100;
             const comprimentoM = (parseFloat(comprimentoInput.value) || 0) / 100;
 
-            // 2. Cálculo do Volume (m³) e Peso Cubado para 1 volume
             const volumeUnitario = alturaM * larguraM * comprimentoM;
             const pesoCubadoUnitario = volumeUnitario * FATOR_CUBAGEM;
 
-            // 3. Soma ao Total (multiplicado pela Quantidade de volumes)
             pesoRealTotal += (pesoKg * quantidade);
             volumeTotal += (volumeUnitario * quantidade);
             pesoCubadoTotal += (pesoCubadoUnitario * quantidade);
         });
 
-        // 4. Atualiza os campos de resumo no HTML
         document.getElementById('total-peso-real').textContent = pesoRealTotal.toFixed(2) + ' kg';
         document.getElementById('total-volume').textContent = volumeTotal.toFixed(3) + ' m³';
         document.getElementById('total-peso-cubado').textContent = pesoCubadoTotal.toFixed(2) + ' kg';
         
-        // Atualiza o Valor Total da Mercadoria (usa o valor já formatado do input)
         const valorMercadoriaInput = document.getElementById('valor-mercadoria');
         document.getElementById('total-valor-mercadoria').textContent = valorMercadoriaInput.value || 'R$ 0,00';
     }
@@ -213,20 +206,22 @@
     // --- Lógica para Adicionar/Excluir Itens ---
     function addItem() {
         const container = document.getElementById("itens-container");
-        // Clona o primeiro item (o modelo)
         const item = container.children[0].cloneNode(true); 
         
-        // Limpa e reseta os valores dos inputs clonados
+        // **CORREÇÃO:** Limpa e reseta os valores dos inputs clonados
         item.querySelectorAll('input').forEach(input => {
-            input.value = input.getAttribute('type') === 'number' ? '1' : ''; // Seta '1' para campos de quantidade
+            // Seta '1' para o campo de quantidade, e vazio/zero para os outros
+            if (input.classList.contains('item-quantidade')) {
+                 input.value = '1';
+            } else {
+                 input.value = '';
+            }
         });
         
-        // Garante que o botão de exclusão chame a função correta
         item.querySelector('button[onclick^="excluirItem"]').setAttribute('onclick', 'excluirItem(this)');
 
         container.appendChild(item);
         
-        // Recalcula os totais após adicionar
         calcularTotais(); 
     }
 
@@ -236,7 +231,6 @@
         
         if (container.children.length > 1) {
             itemParaExcluir.remove();
-            // Recalcula os totais após excluir
             calcularTotais(); 
         } else {
             alert("É necessário manter pelo menos um item da carga para cotação.");
@@ -248,26 +242,20 @@
         let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for dígito
         if (valor.length === 0) {
             input.value = "";
-            calcularTotais(); // Recalcula o total (que será zero)
+            calcularTotais(); 
             return;
         }
 
-        // Adiciona a vírgula para os centavos
         valor = valor.replace(/(\d{2})$/, ',$1'); 
-        
-        // Adiciona o ponto para o milhar (se houver)
         valor = valor.replace(/(\d+)(\d{3},\d{2})$/, '$1.$2'); 
         
-        // Adiciona o R$
         input.value = "R$ " + valor;
 
-        // Recalcula os totais após a mudança no valor da mercadoria
         calcularTotais();
     }
 
     // --- Lógica para Consulta de CEP (ViaCEP) ---
     function buscarCEP(cep, idLocalidade) {
-        // Remove caracteres não numéricos e verifica se tem 8 dígitos
         const cepLimpo = cep.replace(/\D/g, ''); 
         const campoLocalidade = document.getElementById(idLocalidade);
         campoLocalidade.value = "Buscando...";
@@ -281,7 +269,6 @@
             .then(response => response.json())
             .then(data => {
                 if (!data.erro) {
-                    // Preenche com Cidade e Estado
                     campoLocalidade.value = `${data.localidade} / ${data.uf}`;
                 } else {
                     campoLocalidade.value = "CEP Não Encontrado";
@@ -293,7 +280,6 @@
             });
     }
 
-    // Inicializa o cálculo ao carregar a página
     window.onload = function() {
         calcularTotais();
     };
