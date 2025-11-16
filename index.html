@@ -72,48 +72,32 @@
     </div>
 </section>
 
-<!-- FORMULÁRIO COM ITENS DINÂMICOS -->
+<!-- Formulário de Cotação -->
 <section id="cotacao" class="bg-white py-16 shadow-inner">
     <div class="max-w-4xl mx-auto px-4 fade-up">
         <h3 class="text-3xl font-bold text-center mb-10">Solicite sua Cotação</h3>
 
         <form class="grid gap-6">
 
-            <!-- DADOS PESSOAIS -->
             <div class="grid md:grid-cols-2 gap-6">
                 <input type="text" placeholder="Nome*" class="p-3 border rounded-lg w-full">
                 <input type="text" placeholder="Telefone / WhatsApp*" class="p-3 border rounded-lg w-full">
             </div>
 
-            <!-- CEPS -->
-            <div class="grid md:grid-cols-2 gap-6">
-                <input type="text" placeholder="CEP de Origem*" class="p-3 border rounded-lg w-full">
-                <input type="text" placeholder="CEP de Destino*" class="p-3 border rounded-lg w-full">
+            <!-- CEP AUTOMÁTICO -->
+            <div>
+                <input id="cep" type="text" placeholder="CEP de Origem*" class="p-3 border rounded-lg w-full">
+                <small id="cidade" class="text-sm text-gray-600 mt-1 block"></small>
             </div>
 
-            <!-- ITENS DA CARGA -->
-            <h4 class="text-xl font-bold mt-6">Itens da Carga</h4>
+            <input type="text" placeholder="CEP de Destino*" class="p-3 border rounded-lg w-full">
 
-            <!-- CONTÊINER DOS ITENS -->
-            <div id="itens-container" class="space-y-6">
+            <!-- ITENS DINÂMICOS -->
+            <div id="itensArea" class="grid gap-4"></div>
 
-                <!-- ITEM MODELO (será duplicado) -->
-                <div class="item border p-4 rounded-lg bg-gray-50 shadow-sm">
-                    <div class="grid md:grid-cols-4 gap-4">
-                        <input type="number" placeholder="Peso (kg)*" class="p-3 border rounded-lg w-full">
-                        <input type="number" placeholder="Altura (cm)" class="p-3 border rounded-lg w-full">
-                        <input type="number" placeholder="Largura (cm)" class="p-3 border rounded-lg w-full">
-                        <input type="number" placeholder="Comprimento (cm)" class="p-3 border rounded-lg w-full">
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- BOTÃO ADICIONAR ITEM -->
-            <button type="button"
-                onclick="addItem()"
-                class="mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 transition">
-                + Adicionar mais itens
+            <button type="button" id="addItem"
+                class="text-blue-700 border border-blue-700 w-fit px-4 py-1 rounded-lg text-sm hover:bg-blue-50 transition">
+                + Adicionar Item
             </button>
 
             <textarea placeholder="Descrição da Carga"
@@ -148,13 +132,52 @@
     © 2025 Namariel Fretes — Todos os direitos reservados.
 </footer>
 
-<!-- JS PARA ADICIONAR ITENS -->
 <script>
-function addItem() {
-    const container = document.getElementById("itens-container");
-    const item = container.children[0].cloneNode(true);
-    container.appendChild(item);
+// --- CEP automático ---
+document.getElementById("cep").addEventListener("input", async function () {
+    const cep = this.value.replace(/\D/g, "");
+    const cidade = document.getElementById("cidade");
+
+    if (cep.length === 8) {
+        try {
+            const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await res.json();
+
+            cidade.textContent = data.erro
+                ? "CEP não encontrado"
+                : `Cidade: ${data.localidade} - ${data.uf}`;
+
+        } catch {
+            cidade.textContent = "Erro ao buscar CEP";
+        }
+    } else {
+        cidade.textContent = "";
+    }
+});
+
+// --- Itens Dinâmicos ---
+function criarItem() {
+    const div = document.createElement("div");
+    div.className = "grid md:grid-cols-4 gap-4 items-center";
+
+    div.innerHTML = `
+        <input type="number" placeholder="Peso (kg)" class="p-3 border rounded-lg w-full">
+        <input type="number" placeholder="Altura (cm)" class="p-3 border rounded-lg w-full">
+        <input type="number" placeholder="Largura (cm)" class="p-3 border rounded-lg w-full">
+        <button type="button" class="text-red-600 text-xl font-bold">x</button>
+    `;
+
+    div.querySelector("button").onclick = () => div.remove();
+
+    return div;
 }
+
+document.getElementById("addItem").onclick = () => {
+    document.getElementById("itensArea").appendChild(criarItem());
+};
+
+// adicionar 1 item inicial
+document.getElementById("itensArea").appendChild(criarItem());
 </script>
 
 </body>
