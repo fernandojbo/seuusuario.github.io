@@ -1,32 +1,251 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Central Frete</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Central Frete — Calcule seu frete</title>
+
+  <!-- Tailwind via CDN (rápido e sem build) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    body { font-family: Arial; padding: 20px; background: #f6f9fc; }
-    h1 { color: #004AAD; }
-    .box { background: #fff; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,.1); }
-    input, button { width: 100%; padding: 10px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #004AAD; color: #fff; font-weight: bold; }
+    /* pequenos ajustes para inputs e botões */
+    .input { @apply w-full p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300; }
+    .btn { @apply px-4 py-2 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700; }
+    .card { @apply bg-white p-4 rounded-lg shadow-sm; }
   </style>
 </head>
-<body>
-  <h1>Calcule seu frete</h1>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-800">
 
-  <div class="box">
-    <input placeholder="CEP de origem" />
-    <input placeholder="CEP de destino" />
-    <input placeholder="Peso (kg)" />
-    <input placeholder="Altura (cm)" />
-    <input placeholder="Largura (cm)" />
-    <input placeholder="Comprimento (cm)" />
-    <button>Calcular Frete</button>
-  </div>
+  <!-- Header -->
+  <header class="bg-white shadow sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold">CF</div>
+        <div>
+          <div class="font-bold text-lg">Central Frete</div>
+          <div class="text-xs text-slate-500">Calcule e compare fretes</div>
+        </div>
+      </div>
+      <nav class="hidden md:flex gap-4 items-center">
+        <a href="#calc" class="text-sm hover:text-blue-600">Calcule seu frete</a>
+        <a href="#about" class="text-sm hover:text-blue-600">Sobre</a>
+        <a href="#contact" class="text-sm hover:text-blue-600">Contato</a>
+        <a class="btn" href="https://wa.me/559999999999" target="_blank">WhatsApp</a>
+      </nav>
+    </div>
+  </header>
 
-  <p style="margin-top:20px; text-align:center; color:#555;">
-    © Central Frete — Seu cálculo rápido de logística
-  </p>
+  <!-- Hero + Calculator -->
+  <main class="max-w-6xl mx-auto px-4 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <section>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">Calcule seu frete em segundos</h1>
+        <p class="mt-4 text-slate-600">Compare preços e prazos de várias transportadoras. Ideal para e-commerce, logística e operações.</p>
+
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div class="card flex items-start gap-3">
+            <div class="text-2xl text-blue-600">⚡</div>
+            <div>
+              <div class="font-semibold">Rápido</div>
+              <div class="text-sm text-slate-500">Cotações instantâneas</div>
+            </div>
+          </div>
+          <div class="card flex items-start gap-3">
+            <div class="text-2xl text-blue-600">💰</div>
+            <div>
+              <div class="font-semibold">Econômico</div>
+              <div class="text-sm text-slate-500">Compare preços</div>
+            </div>
+          </div>
+          <div class="card flex items-start gap-3">
+            <div class="text-2xl text-blue-600">🛡️</div>
+            <div>
+              <div class="font-semibold">Seguro</div>
+              <div class="text-sm text-slate-500">Parceiros certificados</div>
+            </div>
+          </div>
+          <div class="card flex items-start gap-3">
+            <div class="text-2xl text-blue-600">📞</div>
+            <div>
+              <div class="font-semibold">Suporte</div>
+              <div class="text-sm text-slate-500">Atendimento dedicado</div>
+            </div>
+          </div>
+        </div>
+
+        <p id="calcNote" class="mt-6 text-sm text-slate-500">Observação: cálculo simulado (sem integração com transportadoras). Use para testes e validação do fluxo.</p>
+      </section>
+
+      <section id="calc" class="space-y-4">
+        <div class="card">
+          <h3 class="text-lg font-semibold">Calculadora de Fretes</h3>
+          <p class="text-sm text-slate-500">Preencha origem, destino e dimensões para ver cotações.</p>
+
+          <form id="freightForm" class="mt-4 space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="origin" placeholder="CEP de origem" class="input" />
+              <input id="dest" placeholder="CEP de destino" class="input" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <input id="weight" type="number" min="0.1" step="0.1" value="1" placeholder="Peso (kg)" class="input" />
+              <input id="length" type="number" value="30" placeholder="Comprimento (cm)" class="input" />
+              <input id="width" type="number" value="30" placeholder="Largura (cm)" class="input" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <input id="height" type="number" value="30" placeholder="Altura (cm)" class="input" />
+              <select id="cargoType" class="input">
+                <option value="Normal">Normal</option>
+                <option value="Frágil">Frágil</option>
+                <option value="Perigosa">Perigosa</option>
+              </select>
+            </div>
+
+            <div class="flex gap-2 items-center">
+              <button id="calcBtn" type="button" class="btn">Ver cotações</button>
+              <button id="clearBtn" type="button" class="px-4 py-2 rounded-md border">Limpar</button>
+            </div>
+          </form>
+
+          <div id="results" class="mt-4 space-y-3"></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- About & Contact anchors for completeness -->
+    <section id="about" class="mt-10">
+      <h2 class="text-xl font-bold">Sobre</h2>
+      <p class="text-slate-600 mt-2">Plataforma simples para comparar fretes e ajudar na tomada de decisão logística.</p>
+    </section>
+
+    <section id="contact" class="mt-8">
+      <h2 class="text-xl font-bold">Contato</h2>
+      <p class="text-slate-600 mt-2">Telefone: (99) 99999-9999 • Email: contato@centralfrete.ex</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-900 text-white mt-12">
+    <div class="max-w-6xl mx-auto px-4 py-6 text-center">
+      <div class="font-semibold">CentralFrete</div>
+      <div class="text-sm text-blue-200">© <span id="year"></span> CentralFrete</div>
+    </div>
+  </footer>
+
+  <!-- Script: lógica simples do cálculo (rodando no cliente) -->
+  <script>
+    // helpers
+    function onlyDigits(s){ return (s||'').replace(/\\D/g,''); }
+    function formatBR(v){ return Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const transporters = [
+      { id: 't1', name: 'RápidoLog', base: 25, kmRate: 0.9, speed: 2 },
+      { id: 't2', name: 'SeguriFrete', base: 30, kmRate: 0.7, speed: 3 },
+      { id: 't3', name: 'EconômicaTrans', base: 18, kmRate: 0.5, speed: 5 },
+      { id: 't4', name: 'PremiumCargo', base: 40, kmRate: 1.2, speed: 1 },
+    ];
+
+    const resultsEl = document.getElementById('results');
+    const calcBtn = document.getElementById('calcBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function estimate(origin, dest, weight, length, width, height, cargoType){
+      // pseudo km from CEP digits (deterministic, client-side)
+      const o = Number(onlyDigits(origin).slice(0,5) || 10000);
+      const d = Number(onlyDigits(dest).slice(0,5) || 50000);
+      const km = Math.abs(o - d) / 10 + 50;
+      const volume = (Number(length) * Number(width) * Number(height)) / 1000000; // m3
+      const densityFactor = Math.max(1, Number(weight) / (volume * 200)); // arbitrary
+      const cargoMultiplier = cargoType === 'Frágil' ? 1.2 : (cargoType === 'Perigosa' ? 1.5 : 1.0);
+
+      return transporters.map(t => {
+        const price = (t.base + km * t.kmRate) * densityFactor * cargoMultiplier;
+        return { id: t.id, name: t.name, price: Number(price.toFixed(2)), prazo: t.speed, window: `${t.speed} a ${t.speed + 2} dias` };
+      }).sort((a,b)=>a.price-b.price);
+    }
+
+    function renderResults(list){
+      if(!list || list.length === 0){
+        resultsEl.innerHTML = '<div class="text-sm text-slate-500">Nenhuma cotação. Faça um cálculo.</div>';
+        return;
+      }
+      resultsEl.innerHTML = '';
+      list.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'p-3 border rounded flex items-center justify-between bg-white';
+        card.innerHTML = `
+          <div>
+            <div class="font-semibold">${item.name}</div>
+            <div class="text-xs text-slate-500">Prazo: ${item.window}</div>
+          </div>
+          <div class="text-right">
+            <div class="text-lg font-bold">R$ ${formatBR(item.price)}</div>
+            <button class="mt-2 px-3 py-1 rounded-md bg-blue-600 text-white text-sm" data-id="${item.id}">Solicitar Frete</button>
+          </div>
+        `;
+        resultsEl.appendChild(card);
+      });
+
+      // attach click handlers for WhatsApp buttons
+      Array.from(resultsEl.querySelectorAll('button[data-id]')).forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const item = list.find(i => i.id === id);
+          const origin = document.getElementById('origin').value || '-';
+          const dest = document.getElementById('dest').value || '-';
+          const weight = document.getElementById('weight').value || '-';
+          const length = document.getElementById('length').value || '-';
+          const width = document.getElementById('width').value || '-';
+          const height = document.getElementById('height').value || '-';
+          const cargoType = document.getElementById('cargoType').value || '-';
+
+          const text = encodeURIComponent(
+            `Olá, gostaria de solicitar um frete com ${item.name}.\\nOrigem: ${origin}\\nDestino: ${dest}\\nPeso: ${weight} kg\\nDimensões: ${length}x${width}x${height} cm\\nTipo: ${cargoType}\\nPreço estimado: R$ ${formatBR(item.price)}`
+          );
+          // editar número abaixo para seu WhatsApp
+          window.open(`https://wa.me/559999999999?text=${text}`, '_blank');
+        });
+      });
+    }
+
+    calcBtn.addEventListener('click', () => {
+      const origin = document.getElementById('origin').value.trim();
+      const dest = document.getElementById('dest').value.trim();
+      const weight = Number(document.getElementById('weight').value) || 0;
+      const length = Number(document.getElementById('length').value) || 0;
+      const width = Number(document.getElementById('width').value) || 0;
+      const height = Number(document.getElementById('height').value) || 0;
+      const cargoType = document.getElementById('cargoType').value;
+
+      if(onlyDigits(origin).length < 5 || onlyDigits(dest).length < 5){
+        alert('Informe CEPs válidos (pelo menos 5 dígitos).');
+        return;
+      }
+      if(weight <= 0){ alert('Informe o peso.'); return; }
+
+      resultsEl.innerHTML = '<div class="text-sm text-slate-500">Calculando...</div>';
+
+      setTimeout(() => {
+        const list = estimate(origin, dest, weight, length, width, height, cargoType);
+        renderResults(list);
+      }, 500);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      document.getElementById('freightForm').reset();
+      document.getElementById('weight').value = '1';
+      document.getElementById('length').value = '30';
+      document.getElementById('width').value = '30';
+      document.getElementById('height').value = '30';
+      renderResults([]);
+    });
+
+    // initial empty state
+    renderResults([]);
+  </script>
 </body>
 </html>
