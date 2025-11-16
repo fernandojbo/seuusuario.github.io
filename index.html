@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Namariel Fretes</title>
 
-<link rel="icon" type="image/png" href="/caminho/para/seu/favicon.png"> 
+<link rel="icon" type="image/png" href="favicon.png"> 
+
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -23,7 +24,7 @@
     <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
         
         <a href="#" class="flex items-center"> 
-            <img src="logo.png" alt="Logomarca Namariel Fretes" class="h-12 md:h-20 w-auto max-w-full">
+            <img src="namariel-logo.png" alt="Logomarca Namariel Fretes" class="h-12 md:h-20 w-auto max-w-full">
         </a>
         <nav class="hidden md:flex gap-6 text-gray-600">
             <a href="#cotacao" class="hover:text-blue-600">Cotação</a>
@@ -33,7 +34,7 @@
     </div>
 </header>
 
-<section class="pt-32 pb-20 bg-gradient-to-br from-blue-700 to-blue-500 text-white">
+<section class="pt-40 pb-20 bg-gradient-to-br from-blue-700 to-blue-500 text-white">
     <div class="max-w-6xl mx-auto text-center px-4 fade-up">
         <h2 class="text-4xl md:text-5xl font-bold mb-6">Calcule seu Frete em Segundos</h2>
         <p class="text-lg md:text-xl mb-10">
@@ -78,8 +79,8 @@
         <form class="grid gap-6">
 
             <div class="grid md:grid-cols-2 gap-6">
-                <input type="text" placeholder="Nome*" class="p-3 border rounded-lg w-full">
-                <input type="text" placeholder="Telefone / WhatsApp*" class="p-3 border rounded-lg w-full">
+                <input type="text" id="nome" placeholder="Nome*" class="p-3 border rounded-lg w-full">
+                <input type="text" id="telefone" placeholder="Telefone / WhatsApp*" class="p-3 border rounded-lg w-full">
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
@@ -138,20 +139,20 @@
                 </div>
             </div>
 
-            <textarea placeholder="Descrição da Carga"
+            <textarea id="descricao-carga" placeholder="Descrição da Carga"
                       class="p-3 border rounded-lg w-full" rows="4"></textarea>
 
             <div class="flex flex-col md:flex-row gap-4 justify-center mt-6">
 
-                <a href="https://wa.me/5599999999999?text=Olá,%20quero%20cotação%20de%20frete!"
+                <button type="button" onclick="enviarWhatsApp()"
                    class="bg-green-600 text-white py-3 px-8 rounded-lg text-center font-bold shadow-md hover:bg-green-700 transition">
                     Enviar pelo WhatsApp
-                </a>
+                </button>
 
-                <a href="mailto:seuemail@empresa.com?subject=Cotação%20de%20Frete"
+                <button type="button" onclick="enviarEmail()"
                    class="bg-blue-600 text-white py-3 px-8 rounded-lg text-center font-bold shadow-md hover:bg-blue-700 transition">
                     Enviar por E-mail
-                </a>
+                </button>
             </div>
         </form>
     </div>
@@ -169,7 +170,11 @@
 
 <script>
     const FATOR_CUBAGEM = 300;
+    const NUMERO_WHATSAPP = '5599999999999'; // Substitua pelo seu número de WhatsApp com código do país e DDD
 
+    // ------------------------------------
+    // LÓGICA DE CÁLCULO E VALIDAÇÃO
+    // ------------------------------------
     function calcularTotais() {
         let pesoRealTotal = 0;
         let volumeTotal = 0;
@@ -177,7 +182,7 @@
 
         const itens = document.querySelectorAll('#itens-container .item');
 
-        itens.forEach(item => {
+        itens.forEach((item, index) => {
             const quantidadeInput = item.querySelector('.item-quantidade');
             const pesoInput = item.querySelector('.item-peso');
             const alturaInput = item.querySelector('.item-altura');
@@ -206,42 +211,8 @@
         document.getElementById('total-valor-mercadoria').textContent = valorMercadoriaInput.value || 'R$ 0,00';
     }
 
-
-    // --- Lógica para Adicionar/Excluir Itens ---
-    function addItem() {
-        const container = document.getElementById("itens-container");
-        const item = container.children[0].cloneNode(true); 
-        
-        item.querySelectorAll('input').forEach(input => {
-            if (input.classList.contains('item-quantidade')) {
-                 input.value = '1';
-            } else {
-                 input.value = '';
-            }
-        });
-        
-        item.querySelector('button[onclick^="excluirItem"]').setAttribute('onclick', 'excluirItem(this)');
-
-        container.appendChild(item);
-        
-        calcularTotais(); 
-    }
-
-    function excluirItem(button) {
-        const itemParaExcluir = button.closest('.item');
-        const container = document.getElementById("itens-container");
-        
-        if (container.children.length > 1) {
-            itemParaExcluir.remove();
-            calcularTotais(); 
-        } else {
-            alert("É necessário manter pelo menos um item da carga para cotação.");
-        }
-    }
-
-    // --- Lógica para Máscara de Moeda (R$) ---
     function mascaraMoeda(input) {
-        let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for dígito
+        let valor = input.value.replace(/\D/g, "");
         if (valor.length === 0) {
             input.value = "";
             calcularTotais(); 
@@ -252,12 +223,11 @@
         valor = valor.replace(/(\d+)(\d{3},\d{2})$/, '$1.$2'); 
         
         input.value = "R$ " + valor;
-
         calcularTotais();
     }
 
-    // --- Lógica para Consulta de CEP (ViaCEP) ---
     function buscarCEP(cep, idLocalidade) {
+        // Lógica de busca de CEP... (mantida)
         const cepLimpo = cep.replace(/\D/g, ''); 
         const campoLocalidade = document.getElementById(idLocalidade);
         campoLocalidade.value = "Buscando...";
@@ -281,6 +251,111 @@
                 campoLocalidade.value = "Erro na Consulta";
             });
     }
+
+    function addItem() {
+        // Lógica de adicionar item... (mantida)
+        const container = document.getElementById("itens-container");
+        const item = container.children[0].cloneNode(true); 
+        
+        item.querySelectorAll('input').forEach(input => {
+            if (input.classList.contains('item-quantidade')) {
+                 input.value = '1';
+            } else {
+                 input.value = '';
+            }
+        });
+        
+        item.querySelector('button[onclick^="excluirItem"]').setAttribute('onclick', 'excluirItem(this)');
+
+        container.appendChild(item);
+        
+        calcularTotais(); 
+    }
+
+    function excluirItem(button) {
+        // Lógica de excluir item... (mantida)
+        const itemParaExcluir = button.closest('.item');
+        const container = document.getElementById("itens-container");
+        
+        if (container.children.length > 1) {
+            itemParaExcluir.remove();
+            calcularTotais(); 
+        } else {
+            alert("É necessário manter pelo menos um item da carga para cotação.");
+        }
+    }
+
+
+    // ------------------------------------
+    // FUNÇÕES DE ENVIO DINÂMICO DE MENSAGEM
+    // ------------------------------------
+
+    function gerarMensagem() {
+        const nome = document.getElementById('nome').value;
+        const telefone = document.getElementById('telefone').value;
+        const cepOrigem = document.getElementById('cep-origem').value;
+        const localOrigem = document.getElementById('localidade-origem').value;
+        const cepDestino = document.getElementById('cep-destino').value;
+        const localDestino = document.getElementById('localidade-destino').value;
+        const valorMercadoria = document.getElementById('valor-mercadoria').value;
+        const descricaoCarga = document.getElementById('descricao-carga').value;
+        
+        const pesoRealTotal = document.getElementById('total-peso-real').textContent;
+        const volumeTotal = document.getElementById('total-volume').textContent;
+        const pesoCubadoTotal = document.getElementById('total-peso-cubado').textContent;
+
+        let mensagem = `*SOLICITAÇÃO DE COTAÇÃO - NAMARIEL FRETES*\n\n`;
+        
+        mensagem += `*DADOS DO CLIENTE*\n`;
+        mensagem += `Nome: ${nome || 'Não Informado'}\n`;
+        mensagem += `Telefone/WhatsApp: ${telefone || 'Não Informado'}\n\n`;
+
+        mensagem += `*ROTA*\n`;
+        mensagem += `Origem: ${localOrigem || 'Não Buscado'} (${cepOrigem || 'CEP Não Informado'})\n`;
+        mensagem += `Destino: ${localDestino || 'Não Buscado'} (${cepDestino || 'CEP Não Informado'})\n\n`;
+
+        mensagem += `*RESUMO DA CARGA E VALORES*\n`;
+        mensagem += `Valor da Mercadoria: ${valorMercadoria || 'R$ 0,00'}\n`;
+        mensagem += `Peso Real Total: ${pesoRealTotal}\n`;
+        mensagem += `Peso Cubado Total: ${pesoCubadoTotal}\n`;
+        mensagem += `Volume Total: ${volumeTotal}\n`;
+        mensagem += `Descrição Adicional: ${descricaoCarga || 'Nenhuma'}\n\n`;
+
+        mensagem += `*DETALHES DOS ITENS*\n`;
+        const itens = document.querySelectorAll('#itens-container .item');
+        itens.forEach((item, index) => {
+            const qtd = item.querySelector('.item-quantidade').value;
+            const peso = item.querySelector('.item-peso').value;
+            const alt = item.querySelector('.item-altura').value;
+            const larg = item.querySelector('.item-largura').value;
+            const comp = item.querySelector('.item-comprimento').value;
+
+            mensagem += `Item ${index + 1}: ${qtd} und.\n`;
+            mensagem += ` - Peso: ${peso} kg, Altura: ${alt} cm, Largura: ${larg} cm, Comp.: ${comp} cm\n`;
+        });
+
+        mensagem += `\n*Aguardando retorno para fechar o frete.*`;
+        
+        return mensagem;
+    }
+
+    function enviarWhatsApp() {
+        const mensagem = gerarMensagem();
+        const textoCodificado = encodeURIComponent(mensagem);
+        const url = `https://wa.me/${NUMERO_WHATSAPP}?text=${textoCodificado}`;
+        window.open(url, '_blank');
+    }
+
+    function enviarEmail() {
+        const mensagem = gerarMensagem();
+        const corpoEmail = encodeURIComponent(mensagem);
+        const assuntoEmail = encodeURIComponent("Cotação de Frete - " + document.getElementById('nome').value);
+        
+        const emailDestino = 'contato@namarielfretes.com.br'; // Altere para o seu e-mail
+        const url = `mailto:${emailDestino}?subject=${assuntoEmail}&body=${corpoEmail}`;
+        window.location.href = url; // Usa window.location.href para 'mailto'
+    }
+
 
     window.onload = function() {
         calcularTotais();
