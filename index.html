@@ -2,210 +2,230 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Namariel Fretes</title>
 
+<script src="https://cdn.tailwindcss.com"></script>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f4f6f9;
-        margin: 0;
-        padding: 0;
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
-
-    .container {
-        max-width: 900px;
-        margin: auto;
-        background: white;
-        padding: 25px;
-        margin-top: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    h2 {
-        text-align: center;
-        color: #1a73e8;
-        margin-bottom: 25px;
-        font-size: 26px;
-    }
-
-    label {
-        font-weight: bold;
-        margin-top: 15px;
-        display: block;
-        color: #333;
-    }
-
-    input {
-        width: 100%;
-        padding: 12px;
-        margin-top: 6px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 16px;
-    }
-
-    .row {
-        display: flex;
-        gap: 15px;
-        width: 100%;
-    }
-
-    .row div {
-        flex: 1;
-    }
-
-    .item-box {
-        border: 1px solid #ddd;
-        padding: 15px;
-        margin-top: 15px;
-        border-radius: 10px;
-        background: #fafafa;
-        position: relative;
-    }
-
-    .remove-btn {
-        background: #d9534f;
-        color: #fff;
-        border: none;
-        padding: 6px 10px;
-        border-radius: 6px;
-        font-size: 14px;
-        cursor: pointer;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-    }
-
-    #addItem {
-        margin-top: 20px;
-        background: #1a73e8;
-        color: #fff;
-        border: none;
-        padding: 10px 14px;
-        font-size: 16px;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    .submit-btn {
-        width: 100%;
-        margin-top: 25px;
-        background: #0e57c5;
-        color: white;
-        padding: 14px;
-        border: none;
-        border-radius: 10px;
-        font-size: 18px;
-        cursor: pointer;
-    }
-
-    .city-label {
-        font-size: 14px;
-        font-weight: bold;
-        color: #1a73e8;
-        margin-top: 5px;
-        display: block;
-    }
+    .fade-up { animation: fadeInUp 0.7s ease forwards; }
 </style>
+
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-<div class="container">
+<header class="w-full bg-white shadow-md fixed top-0 left-0 z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
+        <h1 class="text-2xl font-bold text-blue-700">Namariel Fretes</h1>
+        <nav class="hidden md:flex gap-6 text-gray-600">
+            <a href="#cotacao" class="hover:text-blue-600">Cotação</a>
+            <a href="#beneficios" class="hover:text-blue-600">Benefícios</a>
+            <a href="#contato" class="hover:text-blue-600">Contato</a>
+        </nav>
+    </div>
+</header>
 
-    <h2>Namariel Fretes - Solicite sua Cotação</h2>
+<section class="pt-32 pb-20 bg-gradient-to-br from-blue-700 to-blue-500 text-white">
+    <div class="max-w-6xl mx-auto text-center px-4 fade-up">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">Calcule seu Frete em Segundos</h2>
+        <p class="text-lg md:text-xl mb-10">
+            Rápido, prático e sem burocracia. Solicite sua cotação e receba pelo WhatsApp ou E-mail.
+        </p>
 
-    <div class="row">
-        <div>
-            <label>CEP Origem</label>
-            <input type="text" id="cepOrigem" maxlength="9" onblur="buscarCidade(this, 'cidadeOrigem')">
-            <span id="cidadeOrigem" class="city-label"></span>
+        <a href="#cotacao"
+           class="bg-white text-blue-700 px-8 py-3 rounded-full text-lg font-bold shadow-lg hover:bg-gray-100 transition">
+            Solicitar Cotação
+        </a>
+    </div>
+</section>
+
+<section id="beneficios" class="max-w-6xl mx-auto py-16 px-4">
+    <h3 class="text-3xl font-bold text-center mb-12 fade-up">Por que escolher a Namariel Fretes?</h3>
+
+    <div class="grid md:grid-cols-3 gap-8 fade-up">
+        <div class="bg-white shadow-md p-6 rounded-xl text-center hover:scale-105 transition">
+            <div class="text-blue-600 text-4xl mb-4">🚚</div>
+            <h4 class="font-bold text-xl mb-2">Fretes Mais Baratos</h4>
+            <p>Comparação entre diversas transportadoras.</p>
         </div>
 
-        <div>
-            <label>CEP Destino</label>
-            <input type="text" id="cepDestino" maxlength="9" onblur="buscarCidade(this, 'cidadeDestino')">
-            <span id="cidadeDestino" class="city-label"></span>
+        <div class="bg-white shadow-md p-6 rounded-xl text-center hover:scale-105 transition">
+            <div class="text-blue-600 text-4xl mb-4">⏱</div>
+            <h4 class="font-bold text-xl mb-2">Rápido e Sem Complicação</h4>
+            <p>Você solicita, nós encontramos o melhor frete.</p>
+        </div>
+
+        <div class="bg-white shadow-md p-6 rounded-xl text-center hover:scale-105 transition">
+            <div class="text-blue-600 text-4xl mb-4">⭐</div>
+            <h4 class="font-bold text-xl mb-2">Atendimento Humanizado</h4>
+            <p>Fale direto com um especialista.</p>
         </div>
     </div>
+</section>
 
-    <label>Valor da Mercadoria (R$)</label>
-    <input type="text" id="valorMercadoria" oninput="mascaraMoeda(this)">
+<section id="cotacao" class="bg-white py-16 shadow-inner">
+    <div class="max-w-4xl mx-auto px-4 fade-up">
+        <h3 class="text-3xl font-bold text-center mb-10">Solicite sua Cotação</h3>
 
-    <h3>Itens da Carga</h3>
+        <form class="grid gap-6">
 
-    <div id="itensContainer"></div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <input type="text" placeholder="Nome*" class="p-3 border rounded-lg w-full">
+                <input type="text" placeholder="Telefone / WhatsApp*" class="p-3 border rounded-lg w-full">
+            </div>
 
-    <button id="addItem">Adicionar Item</button>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <input type="text" id="cep-origem" placeholder="CEP de Origem*" 
+                           class="p-3 border rounded-lg w-full" maxlength="8" onblur="buscarCEP(this.value, 'localidade-origem')">
+                    <input type="text" id="localidade-origem" placeholder="Cidade / Estado de Origem" 
+                           class="p-3 border rounded-lg w-full mt-2 bg-gray-100" readonly>
+                </div>
+                <div>
+                    <input type="text" id="cep-destino" placeholder="CEP de Destino*" 
+                           class="p-3 border rounded-lg w-full" maxlength="8" onblur="buscarCEP(this.value, 'localidade-destino')">
+                    <input type="text" id="localidade-destino" placeholder="Cidade / Estado de Destino" 
+                           class="p-3 border rounded-lg w-full mt-2 bg-gray-100" readonly>
+                </div>
+            </div>
+            
+            <input type="text" id="valor-mercadoria" placeholder="Valor da Mercadoria (R$)*" 
+                   class="p-3 border rounded-lg w-full" oninput="mascaraMoeda(this)">
 
-    <button class="submit-btn">Enviar Cotação</button>
+            <h4 class="text-xl font-bold mt-6">Itens da Carga</h4>
 
-</div>
+            <div id="itens-container" class="space-y-6">
+
+                <div class="item border p-4 rounded-lg bg-gray-50 shadow-sm">
+                    <div class="grid md:grid-cols-5 gap-4">
+                        <input type="number" placeholder="Quantidade*" class="p-3 border rounded-lg w-full">
+                        <input type="number" placeholder="Peso (kg)*" class="p-3 border rounded-lg w-full">
+                        <input type="number" placeholder="Altura (cm)" class="p-3 border rounded-lg w-full">
+                        <input type="number" placeholder="Largura (cm)" class="p-3 border rounded-lg w-full">
+                        <input type="number" placeholder="Comprimento (cm)" class="p-3 border rounded-lg w-full">
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button type="button" onclick="excluirItem(this)"
+                                class="bg-red-500 text-white py-1 px-4 rounded-lg shadow-md hover:bg-red-600 transition text-sm">
+                            Excluir Item
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="button"
+                onclick="addItem()"
+                class="mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 transition">
+                + Adicionar mais itens
+            </button>
+
+            <textarea placeholder="Descrição da Carga"
+                      class="p-3 border rounded-lg w-full" rows="4"></textarea>
+
+            <div class="flex flex-col md:flex-row gap-4 justify-center mt-6">
+
+                <a href="https://wa.me/5599999999999?text=Olá,%20quero%20cotação%20de%20frete!"
+                   class="bg-green-600 text-white py-3 px-8 rounded-lg text-center font-bold shadow-md hover:bg-green-700 transition">
+                    Enviar pelo WhatsApp
+                </a>
+
+                <a href="mailto:seuemail@empresa.com?subject=Cotação%20de%20Frete"
+                   class="bg-blue-600 text-white py-3 px-8 rounded-lg text-center font-bold shadow-md hover:bg-blue-700 transition">
+                    Enviar por E-mail
+                </a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section id="contato" class="max-w-4xl mx-auto py-16 px-4 fade-up">
+    <h3 class="text-3xl font-bold text-center mb-8">Contato</h3>
+    <p class="text-center mb-4">📞 WhatsApp: (99) 99999-9999</p>
+    <p class="text-center">📧 E-mail: contato@namarielfretes.com.br</p>
+</section>
+
+<footer class="bg-gray-800 text-white text-center p-6">
+    © 2025 Namariel Fretes — Todos os direitos reservados.
+</footer>
 
 <script>
-/* Máscara em formato R$ */
-function mascaraMoeda(campo) {
-    let v = campo.value.replace(/\D/g, "");
-    v = (v / 100).toFixed(2) + "";
-    v = v.replace(".", ",");
-    v = "R$ " + v.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    campo.value = v;
-}
+    // --- Lógica para Adicionar/Excluir Itens ---
+    function addItem() {
+        const container = document.getElementById("itens-container");
+        // Clona o primeiro item (o modelo)
+        const item = container.children[0].cloneNode(true); 
+        // Limpa os valores dos inputs clonados
+        item.querySelectorAll('input').forEach(input => input.value = ''); 
+        container.appendChild(item);
+    }
 
-/* Buscar cidade automaticamente */
-function buscarCidade(input, destino) {
-    const cep = input.value.replace(/\D/g, "");
-    if (cep.length !== 8) return;
+    function excluirItem(button) {
+        const itemParaExcluir = button.closest('.item');
+        const container = document.getElementById("itens-container");
+        
+        // Impede a exclusão do último item para manter o modelo
+        if (container.children.length > 1) {
+            itemParaExcluir.remove();
+        } else {
+            alert("É necessário manter pelo menos um item da carga para cotação.");
+        }
+    }
 
-    fetch(`https://viacep.com.br/ws/${cep}/json/`)
-        .then(r => r.json())
-        .then(d => {
-            if (!d.erro) {
-                document.getElementById(destino).textContent =
-                    `${d.localidade} - ${d.uf}`;
-            }
-        });
-}
+    // --- Lógica para Máscara de Moeda (R$) ---
+    function mascaraMoeda(input) {
+        let valor = input.value.replace(/\D/g, ""); // Remove tudo que não for dígito
+        if (valor.length === 0) {
+            input.value = "";
+            return;
+        }
 
-/* Adicionar itens sem recarregar */
-document.getElementById("addItem").addEventListener("click", function (e) {
-    e.preventDefault();
+        // Adiciona a vírgula para os centavos
+        valor = valor.replace(/(\d{2})$/, ',$1'); 
+        
+        // Adiciona o ponto para o milhar (se houver)
+        valor = valor.replace(/(\d+)(\d{3},\d{2})$/, '$1.$2'); 
+        
+        // Adiciona o R$
+        input.value = "R$ " + valor;
+    }
 
-    const div = document.createElement("div");
-    div.className = "item-box";
+    // --- Lógica para Consulta de CEP (ViaCEP) ---
+    function buscarCEP(cep, idLocalidade) {
+        // Remove caracteres não numéricos e verifica se tem 8 dígitos
+        const cepLimpo = cep.replace(/\D/g, ''); 
+        const campoLocalidade = document.getElementById(idLocalidade);
+        campoLocalidade.value = "Buscando...";
 
-    div.innerHTML = `
-        <button class="remove-btn" onclick="this.parentNode.remove()">X</button>
+        if (cepLimpo.length !== 8) {
+            campoLocalidade.value = "CEP Inválido";
+            return;
+        }
 
-        <label>Quantidade de Volumes</label>
-        <input type="number" class="qtd">
+        fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                if (!data.erro) {
+                    // Preenche com Cidade e Estado
+                    campoLocalidade.value = `${data.localidade} / ${data.uf}`;
+                } else {
+                    campoLocalidade.value = "CEP Não Encontrado";
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar CEP:', error);
+                campoLocalidade.value = "Erro na Consulta";
+            });
+    }
 
-        <div class="row">
-            <div>
-                <label>Peso (kg)</label>
-                <input type="number" class="peso">
-            </div>
-            <div>
-                <label>Altura (m)</label>
-                <input type="number" class="altura">
-            </div>
-        </div>
-
-        <div class="row">
-            <div>
-                <label>Largura (m)</label>
-                <input type="number" class="largura">
-            </div>
-            <div>
-                <label>Comprimento (m)</label>
-                <input type="number" class="comprimento">
-            </div>
-        </div>
-    `;
-
-    document.getElementById("itensContainer").appendChild(div);
-});
+    // Chama a função addItem no carregamento para garantir que pelo menos um item esteja visível.
+    window.onload = function() {
+        // Nada a fazer aqui, pois o item modelo já está no HTML
+    };
 </script>
 
 </body>
