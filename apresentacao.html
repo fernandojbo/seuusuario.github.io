@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreteOnX - Intermediação Logística</title>
+    <!-- Tailwind CSS para estilização moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons para ícones profissionais -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white !important; }
+            header, section { page-break-inside: avoid; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00c4f5, #0088cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-accent { color: #00c4f5; }
+        .logo-primary { color: #0f2d4e; }
+    </style>
+</head>
+<body class="bg-gray-50 text-slate-800">
+
+    <!-- Botão de Impressão Flutuante -->
+    <button onclick="window.print()" class="no-print fixed bottom-8 right-8 z-50 p-4 bg-slate-900 text-white rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center gap-2 group">
+        <i data-lucide="printer"></i>
+        <span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 ease-in-out whitespace-nowrap">
+            Salvar em PDF
+        </span>
+    </button>
+
+    <!-- Header / Hero Section -->
+    <header class="bg-white border-b border-gray-100 py-12 px-6">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="flex-1 text-center md:text-left">
+                <!-- Logo -->
+                <div class="flex items-center justify-center md:justify-start gap-2 mb-6">
+                    <div class="text-4xl font-black tracking-tighter logo-primary">
+                        FRETE<span class="logo-accent">ONX</span>
+                    </div>
+                    <div class="w-10 h-10">
+                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                            <path d="M20 20 L80 80 M80 20 L20 80" stroke="#00c4f5" stroke-width="15" stroke-linecap="round" opacity="0.8" />
+                            <path d="M30 30 L70 70" stroke="#0f2d4e" stroke-width="15" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold mb-4 leading-tight logo-primary">
+                    Sua Carga no Destino Certo, <br>
+                    <span class="gradient-text">Pelo Melhor Custo.</span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                    Intermediamos sua logística conectando sua empresa às transportadoras mais eficientes do mercado.
+                </p>
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start no-print">
+                    <a href="https://fernandojbo.github.io/seuusuario.github.io/#cotacao" target="_blank" class="px-8 py-3 rounded-full text-white font-bold transition-transform hover:scale-105 shadow-lg flex items-center gap-2" style="background: linear-gradient(135deg, #00c4f5, #0088cc)">
+                        Solicitar Cotação <i data-lucide="arrow-right" size="18"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="flex-1 relative">
+                <div class="bg-white p-8 rounded-3xl shadow-2xl border border-gray-100 relative z-10">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="p-3 rounded-2xl bg-cyan-50 text-cyan-600">
+                            <i data-lucide="truck" size="32"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl">Rede FreteOnX</h3>
+                            <p class="text-sm text-gray-500">+500 Transportadoras Ativas</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-cyan-400 w-3/4"></div>
+                        </div>
+                        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 w-1/2"></div>
+                        </div>
+                        <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-600 w-5/6"></div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-sm italic text-gray-500 text-center">
+                        "Você busca. A gente conecta. FreteOnX"
+                    </p>
+                </div>
+                <!-- Decorativos -->
+                <div class="absolute -top-4 -right-4 w-24 h-24 rounded-full bg-cyan-100 blur-3xl opacity-50 no-print"></div>
+                <div class="absolute -bottom-4 -left-4 w-32 h-32 rounded-full bg-blue-100 blur-3xl opacity-50 no-print"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Benefícios -->
+    <section class="py-20 px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4 logo-primary">Por que escolher a FreteOnX?</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Eliminamos a burocracia e a incerteza da contratação de fretes, focando no que importa: eficiência e economia.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Card 1 -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                <div class="mb-6 p-4 inline-block rounded-xl bg-gray-50 text-cyan-600 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                    <i data-lucide="dollar-sign"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 logo-primary">Melhores Preços</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Negociamos volumes para garantir tabelas competitivas que você não encontraria sozinho.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                <div class="mb-6 p-4 inline-block rounded-xl bg-gray-50 text-cyan-600 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                    <i data-lucide="clock"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 logo-primary">Prazos Otimizados</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Filtramos transportadoras com as melhores rotas para a urgência da sua carga.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                <div class="mb-6 p-4 inline-block rounded-xl bg-gray-50 text-cyan-600 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 logo-primary">Segurança Total</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Apenas parceiros homologados e com seguro de carga ativo em nossa rede.</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+                <div class="mb-6 p-4 inline-block rounded-xl bg-gray-50 text-cyan-600 group-hover:bg-cyan-500 group-hover:text-white transition-colors">
+                    <i data-lucide="bar-chart-3"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3 logo-primary">Inteligência de Dados</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">Cruzamos os dados da sua carga com a especialidade de cada transportadora.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fluxo de Trabalho -->
+    <section class="py-20 bg-slate-900 text-white overflow-hidden relative">
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <h2 class="text-3xl font-bold text-center mb-16">Como Funciona o Nosso Processo</h2>
+            
+            <div class="grid md:grid-cols-4 gap-4 relative">
+                <div class="hidden md:block absolute top-7 left-0 w-full h-0.5 bg-slate-700 no-print"></div>
+                
+                <div class="relative z-10 flex flex-col items-center text-center p-4">
+                    <div class="w-14 h-14 rounded-full bg-cyan-500 flex items-center justify-center text-xl font-black mb-6 shadow-lg shadow-cyan-500/20">01</div>
+                    <p class="text-sm font-medium text-slate-300">Você envia os dados da carga e destino.</p>
+                </div>
+                <div class="relative z-10 flex flex-col items-center text-center p-4">
+                    <div class="w-14 h-14 rounded-full bg-cyan-500 flex items-center justify-center text-xl font-black mb-6 shadow-lg shadow-cyan-500/20">02</div>
+                    <p class="text-sm font-medium text-slate-300">Nossa tecnologia busca as melhores opções na rede.</p>
+                </div>
+                <div class="relative z-10 flex flex-col items-center text-center p-4">
+                    <div class="w-14 h-14 rounded-full bg-cyan-500 flex items-center justify-center text-xl font-black mb-6 shadow-lg shadow-cyan-500/20">03</div>
+                    <p class="text-sm font-medium text-slate-300">Apresentamos as propostas de custo-benefício.</p>
+                </div>
+                <div class="relative z-10 flex flex-col items-center text-center p-4">
+                    <div class="w-14 h-14 rounded-full bg-cyan-500 flex items-center justify-center text-xl font-black mb-6 shadow-lg shadow-cyan-500/20">04</div>
+                    <p class="text-sm font-medium text-slate-300">Você escolhe e nós cuidamos da intermediação.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="py-20 px-6 text-center no-print">
+        <div class="max-w-3xl mx-auto bg-white border border-gray-100 p-12 rounded-[2rem] shadow-xl">
+            <i data-lucide="search" class="w-16 h-16 mx-auto mb-6 text-cyan-500 opacity-20"></i>
+            <h2 class="text-3xl font-bold mb-6 logo-primary">Pronto para otimizar sua logística?</h2>
+            <p class="text-gray-600 mb-10 text-lg">
+                Pare de perder tempo com dezenas de telefonemas. Deixe que a FreteOnX encontre o parceiro ideal para sua próxima entrega.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="https://fernandojbo.github.io/seuusuario.github.io/#cotacao" class="px-10 py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors">
+                    Fazer Minha Primeira Cotação
+                </a>
+                <a href="#" class="px-10 py-4 border-2 border-gray-200 rounded-xl font-bold hover:bg-gray-50 transition-colors">
+                    Falar com Consultor
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 text-center text-gray-400 text-sm border-t border-gray-100">
+        <p>© 2024 FreteOnX Intermediação de Negócios. Todos os direitos reservados.</p>
+        <p class="mt-2 logo-accent font-medium">www.freteonx.com.br</p>
+    </footer>
+
+    <script>
+        // Inicializa os ícones da Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>
